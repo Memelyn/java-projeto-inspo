@@ -16,7 +16,7 @@ export default function Books(){
     const accessToken = localStorage.getItem('accessToken');
     const navigate = useNavigate();
 
-    navigate('/books')
+    //navigate('/books')
 
     async function logout() {
         localStorage.clear();
@@ -25,7 +25,7 @@ export default function Books(){
 
     async function editBook(id) {
         try {
-            navigate(`book/new/${id}`)
+            navigate(`/book/new/${id}`)
         } catch (error) {
             alert('Edit failed! Try again.');
         }
@@ -45,20 +45,34 @@ export default function Books(){
     }
 
     async function fetchMoreBooks() {
-        const response = await api.get('api/book/v1', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            },
-            params: {
-                page: page,
-                limit: 4,
-                direction: 'asc'
-            }
-        });
+    const response = await api.get('api/book/v1', {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        },
+        params: {
+            page: page,
+            size: 4,
+            direction: 'asc'
+        }
+    });
 
-        setBooks([ ...books, ...response.data._embedded.bookVoes])
+    console.log('Resposta da API:', response.data); // <-- ADICIONE AQUI
+
+    // Apenas tente acessar se _embedded existir
+    if (response.data._embedded) {
+        const embeddedKeys = Object.keys(response.data._embedded);
+        console.log('Chaves dentro de _embedded:', embeddedKeys); // <-- ADICIONE AQUI TAMBÉM
+
+        const key = embeddedKeys[0]; // pega a primeira chave, ex: 'bookDTOList'
+        const newBooks = response.data._embedded[key];
+
+        setBooks([...books, ...newBooks]);
         setPage(page + 1);
+    } else {
+        console.warn('Nenhum _embedded encontrado na resposta da API.');
     }
+}
+
 
     useEffect(() => {
         fetchMoreBooks();
@@ -68,7 +82,7 @@ export default function Books(){
         <div className="book-container">
             <header>
                 <span>Bem vindo, <strong>{username.toUpperCase()}</strong>!</span>
-                <Link className="button" to="book/new/0">Adicionar Livro</Link>
+                <Link className="button" to="/book/new/0">Adicionar Livro</Link>
                 <button onClick={logout} type="button">
                     <FiPower size={18} color="#251FC5" />
                 </button>

@@ -30,7 +30,7 @@ public class BookController implements BookControllerDocs {
     @Override
     public  ResponseEntity <PagedModel<EntityModel<BookDTO>>> findAll(
             @RequestParam(value="page", defaultValue = "0") Integer page,
-            @RequestParam(value="size", defaultValue = "0") Integer size,
+            @RequestParam(value="size", defaultValue = "10") Integer size,
             @RequestParam(value="direction", defaultValue = "asc") String direction
     ) {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
