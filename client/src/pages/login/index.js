@@ -21,16 +21,19 @@ export default function Login(){
             username,
             password,
         };
-        try {
-            const response = await api.post('auth/signin', data);
-            localStorage.setItem('username', username);
-            localStorage.setItem('accessToken', response.data.token);
+       try {
+  const response = await api.post('auth/signin', data);
+  //console.log('Resposta do login:', response.data); 
 
-            navigate('/books')
+  localStorage.setItem('username', username);
+  localStorage.setItem('accessToken', response.data.body.accessToken); 
 
-        } catch (err) {
-            alert('Login failed: try again');
-        }
+  navigate('/books');
+} catch (err) {
+  //console.error('Erro no login:', err.response?.data || err.message);
+  alert('Login failed: try again');
+}
+
     }
 
     return (
@@ -38,7 +41,7 @@ export default function Login(){
            <section className="form">
             <form onSubmit={login}>
                 <input 
-                placeholder='username'
+                placeholder='userName'
                 value = {username}
                 onChange={e => setUsername(e.target.value)}
                 />
