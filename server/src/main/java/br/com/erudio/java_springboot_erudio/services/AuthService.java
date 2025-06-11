@@ -8,6 +8,7 @@ import br.com.erudio.java_springboot_erudio.Model.Person;
 import br.com.erudio.java_springboot_erudio.Model.User;
 import br.com.erudio.java_springboot_erudio.repository.UserRepository;
 import br.com.erudio.java_springboot_erudio.security.jwt.JwtTokenProvider;
+import br.com.erudio.java_springboot_erudio.util.PasswordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class AuthService {
         var entity = new User();
         entity.setFullName(user.getFullname());
         entity.setUserName(user.getUsername());
-        entity.setPassword(generateHashedPassword(user.getPassword()));
+        entity.setPassword(PasswordUtil.hash(user.getPassword()));
         entity.setAccountNonExpired(true);
         entity.setAccountNonLocked(true);
         entity.setCredentialsNonExpired(true);

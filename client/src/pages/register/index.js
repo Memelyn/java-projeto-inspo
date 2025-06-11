@@ -26,9 +26,9 @@ export default function Register() {
     };
 
     try {
-      await api.post('/users', data);
+      await api.post('/api/user/v1', data);
       alert('User registered successfully!');
-      navigate('/login'); // redireciona para tela de login
+      navigate('/'); // redireciona para tela de login
     } catch (err) {
       console.error(err.response?.data || err.message);
       alert('Failed to register user. Please try again.');

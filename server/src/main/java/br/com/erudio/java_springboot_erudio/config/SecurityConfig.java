@@ -5,6 +5,7 @@ import br.com.erudio.java_springboot_erudio.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -70,10 +71,13 @@ public class SecurityConfig {
                                         "/auth/refresh/**",
                                         "/auth/createUser",
                                         "/swagger-ui/**",
-                                        "/v3/api-docs/**"
+                                        "/v3/api-docs/**",
+                                        "/api/user/v1"
                                 ).permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .requestMatchers("/users").denyAll()
+                                .requestMatchers(HttpMethod.POST, "/api/user/v1").permitAll()
+
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .cors(Customizer.withDefaults()); // ou .cors(cors -> {})

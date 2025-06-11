@@ -20,7 +20,7 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
-    private List<String> roles;
+    //private List<String> roles;
 
     public UserDTO() {}
 
@@ -88,13 +88,13 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
         this.enabled = enabled;
     }
 
-    public List<String> getRoles() {
-        return roles;
-    }
+   // public List<String> getRoles() {
+    //    return roles;
+    //}
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
+   // public void setRoles(List<String> roles) {
+      //  this.roles = roles;
+    //}
 
     @Override
     public boolean equals(Object o) {
@@ -107,14 +107,14 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
                Objects.equals(getAccountNonExpired(), user.getAccountNonExpired()) &&
                Objects.equals(getAccountNonLocked(), user.getAccountNonLocked()) &&
                Objects.equals(getCredentialsNonExpired(), user.getCredentialsNonExpired()) &&
-               Objects.equals(getEnabled(), user.getEnabled()) &&
-               Objects.equals(getRoles(), user.getRoles());
+               Objects.equals(getEnabled(), user.getEnabled()) ;
+             //  Objects.equals(getRoles(), user.getRoles());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getUserName(), getFullName(), getPassword(),
-                getAccountNonExpired(), getAccountNonLocked(),
-                getCredentialsNonExpired(), getEnabled(), getRoles());
+                getAccountNonExpired(), getAccountNonLocked());
+               // getCredentialsNonExpired(), getEnabled(), getRoles());
     }
 }

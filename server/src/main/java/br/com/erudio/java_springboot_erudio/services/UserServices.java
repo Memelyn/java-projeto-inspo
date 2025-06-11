@@ -6,6 +6,7 @@ import br.com.erudio.java_springboot_erudio.Exception.ResourceNotFoundException;
 import br.com.erudio.java_springboot_erudio.Model.User;
 import br.com.erudio.java_springboot_erudio.data.dto.UserDTO;
 import br.com.erudio.java_springboot_erudio.repository.UserRepository;
+import br.com.erudio.java_springboot_erudio.util.PasswordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,29 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import static br.com.erudio.java_springboot_erudio.mapper.ObjectMapper.parseObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Service
-public class UserServices {
+public class UserServices implements UserDetailsService {
 
     private Logger logger = LoggerFactory.getLogger(UserServices.class.getName());
+
+    public UserServices(UserRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = repository.findByUsername(username);
+        if (user != null) return user;
+        else throw new UsernameNotFoundException("Username "+ username +" not found!");
+    }
 
     @Autowired
     UserRepository repository;
@@ -67,6 +82,7 @@ public class UserServices {
         logger.info("Creating one User!");
 
         var entity = parseObject(user, User.class);
+        entity.setPassword(PasswordUtil.hash(user.getPassword()));
         var dto = parseObject(repository.save(entity), UserDTO.class);
         addHateoasLinks(dto);
         return dto;
@@ -82,7 +98,7 @@ public class UserServices {
 
         entity.setUserName(user.getUserName());
         entity.setFullName(user.getFullName());
-        entity.setPassword(user.getPassword());
+        entity.setPassword(PasswordUtil.hash(user.getPassword()));
         entity.setAccountNonExpired(user.getAccountNonExpired());
         entity.setAccountNonLocked(user.getAccountNonLocked());
         entity.setCredentialsNonExpired(user.getCredentialsNonExpired());
