@@ -1,8 +1,10 @@
 package br.com.erudio.java_springboot_erudio.Controller;
 
 import br.com.erudio.java_springboot_erudio.data.dto.UserDTO;
+import br.com.erudio.java_springboot_erudio.Model.User;
 import br.com.erudio.java_springboot_erudio.services.UserServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import static br.com.erudio.java_springboot_erudio.mapper.ObjectMapper.parseObject;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,6 +49,12 @@ public class UserController {
     public UserDTO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
+
+    @GetMapping("/me")
+    public UserDTO getAuthenticatedUser(@AuthenticationPrincipal User user) {
+        return parseObject(user, UserDTO.class);
+    }
+
 
     @PostMapping(
             consumes = {
