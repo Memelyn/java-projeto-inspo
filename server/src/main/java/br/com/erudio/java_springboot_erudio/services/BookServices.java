@@ -1,6 +1,7 @@
 package br.com.erudio.java_springboot_erudio.services;
 
 import br.com.erudio.java_springboot_erudio.Controller.BookController;
+import br.com.erudio.java_springboot_erudio.Model.User;
 import br.com.erudio.java_springboot_erudio.data.dto.BookDTO;
 import br.com.erudio.java_springboot_erudio.Exception.BadRequestException;
 import br.com.erudio.java_springboot_erudio.Exception.ResourceNotFoundException;
@@ -9,12 +10,15 @@ import br.com.erudio.java_springboot_erudio.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import static br.com.erudio.java_springboot_erudio.mapper.ObjectMapper.parseObject;
@@ -32,14 +36,18 @@ public class BookServices {
     @Autowired
     PagedResourcesAssembler<BookDTO> assembler;
 
+    @Autowired
+    private UserServices userServices;
+
+
     public PagedModel<EntityModel<BookDTO>> findAll(Pageable pageable) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = (User) auth.getPrincipal();
         logger.info("Finding all Book!");
 
-//        var books = parseListObjects(repository.findAll(), BookDTO.class);
-//        books.forEach(this::addHateoasLinks);
 
-        var books = repository.findAll(pageable);
+        var books = repository.findByUserId(loggedUser.getId(), pageable);
 
         var booksWithLinks = books.map(book -> {
             var dto = parseObject(book, BookDTO.class);
@@ -72,6 +80,15 @@ public class BookServices {
 
         logger.info("Creating one Book!");
         var entity = parseObject(book, Book.class);
+
+        // Pega usuário autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
+            throw new RuntimeException("Usuário não autenticado");
+        }
+
+        User loggedUser = (User) authentication.getPrincipal();
+        entity.setUser(loggedUser); // associa o livro ao usuário logado
 
         var dto = parseObject(repository.save(entity), BookDTO.class);
         addHateoasLinks(dto);

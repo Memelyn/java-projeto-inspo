@@ -38,20 +38,21 @@ export default function Register() {
   return (
     <div className="login-container">
       <section className="form">
+         <h1>Cadastro</h1>
         <form onSubmit={handleRegister}>
           <input
-            placeholder="Username"
+            placeholder="Nome do usuário"
             value={userName}
             onChange={e => setUserName(e.target.value)}
           />
           <input
-            placeholder="Full Name"
+            placeholder="Nome Completo"
             value={fullName}
             onChange={e => setFullName(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Senha"
             value={password}
             onChange={e => setPassword(e.target.value)}
           />

@@ -29,6 +29,10 @@ public class Book implements Serializable {
     @Column(nullable = false, length = 250)
     private String title;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Book() {}
 
     public Long getId() {
@@ -71,15 +75,22 @@ public class Book implements Serializable {
         this.title = title;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Objects.equals(getId(), book.getId()) && Objects.equals(getAuthor(), book.getAuthor()) && Objects.equals(getLaunchDate(), book.getLaunchDate()) && Objects.equals(getPrice(), book.getPrice()) && Objects.equals(getTitle(), book.getTitle());
+        if (!(o instanceof Book book)) return false;
+        return Objects.equals(getId(), book.getId()) && Objects.equals(getAuthor(), book.getAuthor()) && Objects.equals(getLaunchDate(), book.getLaunchDate()) && Objects.equals(getPrice(), book.getPrice()) && Objects.equals(getTitle(), book.getTitle()) && Objects.equals(getUser(), book.getUser());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getAuthor(), getLaunchDate(), getPrice(), getTitle());
+        return Objects.hash(getId(), getAuthor(), getLaunchDate(), getPrice(), getTitle(), getUser());
     }
 }

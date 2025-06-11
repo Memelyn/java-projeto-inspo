@@ -8,6 +8,7 @@
 .book-container header{
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .book-container header span{
@@ -30,13 +31,17 @@
 }
 
 .book-container header button{
-    height: 60px;
+   height: 60px;
     width: 60px;
-    border-radius: 4px;
+    border-radius: 8px;
     border: 1px solid #DCDCE6;
     background: transparent;
     margin-left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: border-color 0.5s;
+    cursor: pointer;
 }
 
 .book-container header button:hover{
@@ -93,4 +98,25 @@
     color: #737380;
     line-height: 21px;
     font-size: 16px;
+}
+
+.book-container header .button {
+    height: 60px;
+    padding: 0 24px;
+    background: #251FC5;
+    color: #FFF;
+    font-weight: 600;
+    border: 0;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: filter 0.2s;
+}
+
+.book-container header button:hover {
+    border-color: #251FC5;
 }

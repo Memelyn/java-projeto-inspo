@@ -82,7 +82,7 @@ export default function NewBook(){
         <div className="new-book-container">
             <div className="content">
                 <section className="form">
-                    <h1>{bookId === '0' ? 'Add New' : 'Update'} Livro</h1>
+                    <h1>{bookId === '0' ? 'Adicionar novo' : 'Update'} Livro</h1>
                     <p>Entre com as informações do livro em clique em {bookId === '0' ? "'Add'" : "'Update'"}!</p>
                     <Link className="back-link" to="/books">
                         <FiArrowLeft size={16} color="#251fc5"/>

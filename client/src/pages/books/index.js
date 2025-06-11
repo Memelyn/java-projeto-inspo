@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiPower, FiEdit, FiTrash2 } from 'react-icons/fi'
+import { FiPower, FiEdit, FiTrash2, FiUser } from 'react-icons/fi'
 
 import api from '../../services/api'
 
@@ -10,7 +10,7 @@ import './styles.css';
 export default function Books(){
 
     const [books, setBooks] = useState([]);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     
     const username = localStorage.getItem('username');
     const accessToken = localStorage.getItem('accessToken');
@@ -56,12 +56,12 @@ export default function Books(){
         }
     });
 
-    console.log('Resposta da API:', response.data); // <-- ADICIONE AQUI
+    console.log('Resposta da API:', response.data); 
 
     // Apenas tente acessar se _embedded existir
     if (response.data._embedded) {
         const embeddedKeys = Object.keys(response.data._embedded);
-        console.log('Chaves dentro de _embedded:', embeddedKeys); // <-- ADICIONE AQUI TAMBÉM
+        console.log('Chaves dentro de _embedded:', embeddedKeys); 
 
         const key = embeddedKeys[0]; // pega a primeira chave, ex: 'bookDTOList'
         const newBooks = response.data._embedded[key];
@@ -83,6 +83,9 @@ export default function Books(){
             <header>
                 <span>Bem vindo, <strong>{username.toUpperCase()}</strong>!</span>
                 <Link className="button" to="/book/new/0">Adicionar Livro</Link>
+                 <button onClick={() => navigate('/profile')} type="button" title="Perfil">
+    <FiUser size={18} color="#251FC5" />
+  </button>
                 <button onClick={logout} type="button">
                     <FiPower size={18} color="#251FC5" />
                 </button>

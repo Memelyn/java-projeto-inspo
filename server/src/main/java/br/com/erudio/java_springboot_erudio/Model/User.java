@@ -46,6 +46,9 @@ public class User implements UserDetails, Serializable {
             inverseJoinColumns = {@JoinColumn(name = "id_permission")})
     private List<Permission> permissions;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Book> books;
+
     // não é uma convenção do JPA, mas a gente precisa adicionar para usar em camadas superiores
     public List<String> getRoles(){
         List<String> roles =  new ArrayList<>();
@@ -97,12 +100,17 @@ public class User implements UserDetails, Serializable {
 
     // getters e setters
 
+
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public void setUserName(String userName) {
@@ -161,16 +169,25 @@ public class User implements UserDetails, Serializable {
         this.permissions = permissions;
     }
 
-    // equals and hashCode
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    // equals and hash code
+
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof User user)) return false;
-        return getId() == user.getId() && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getFullName(), user.getFullName()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(isAccountNonExpired(), user.isAccountNonExpired()) && Objects.equals(isAccountNonLocked(), user.isAccountNonLocked()) && Objects.equals(isCredentialsNonExpired(), user.isCredentialsNonExpired()) && Objects.equals(isEnabled(), user.isEnabled()) && Objects.equals(getPermissions(), user.getPermissions());
+        return getId() == user.getId() && Objects.equals(getUserName(), user.getUserName()) && Objects.equals(getFullName(), user.getFullName()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(isAccountNonExpired(), user.isAccountNonExpired()) && Objects.equals(isAccountNonLocked(), user.isAccountNonLocked()) && Objects.equals(isCredentialsNonExpired(), user.isCredentialsNonExpired()) && Objects.equals(isEnabled(), user.isEnabled()) && Objects.equals(getPermissions(), user.getPermissions()) && Objects.equals(getBooks(), user.getBooks());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUsername(), getFullName(), getPassword(), isAccountNonExpired(), isAccountNonLocked(), isCredentialsNonExpired(), isEnabled(), getPermissions());
+        return Objects.hash(getId(), getUserName(), getFullName(), getPassword(), isAccountNonExpired(), isAccountNonLocked(), isCredentialsNonExpired(), isEnabled(), getPermissions(), getBooks());
     }
 }

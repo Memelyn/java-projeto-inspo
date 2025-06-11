@@ -12,6 +12,9 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.com.erudio.java_springboot_erudio.Model.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import static br.com.erudio.java_springboot_erudio.mapper.ObjectMapper.parseObject;
 
 @RestController
 @RequestMapping("/api/user/v1")
@@ -36,6 +39,11 @@ public class UserController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "userName"));
         return ResponseEntity.ok(service.findAll(pageable));
+    }
+
+    @GetMapping("/me")
+    public UserDTO getAuthenticatedUser(@AuthenticationPrincipal User user) {
+        return parseObject(user, UserDTO.class);
     }
 
     @GetMapping(value = "/{id}",
